@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<!--
+This is a starter template page. Use this page to start your new project from
+scratch. This page gets rid of all links and provides the needed markup only.
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AMSSTP SYSTEM</title>
+
+  <!-- Google Font: Source Sans Pro -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="../plugins/fontawesome-free/css/all.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="../dist/css/adminlte.min.css">
+</head>
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+
+  <!-- Navbar -->
+  <nav class="main-header navbar navbar-expand navbar-blue navbar-light">
+    <!-- Left navbar links -->
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+      </li>
+     
+    </ul>
+
+    <!-- Right navbar links -->
+    <ul class="navbar-nav ml-auto">
+      <!-- Navbar Search -->
+      <li class="nav-item">
+        <a class="nav-link" data-widget="navbar-search" href="#" role="button">
+          <i class="fas fa-search"></i>
+        </a>
+        <div class="navbar-search-block">
+          <form class="form-inline">
+            <div class="input-group input-group-sm">
+              <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search">
+              <div class="input-group-append">
+                <button class="btn btn-navbar" type="submit">
+                  <i class="fas fa-search"></i>
+                </button>
+                <button class="btn btn-navbar" type="button" data-widget="navbar-search">
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </li>
+
+  
+     
+    </ul>
+  </nav>
+  <!-- /.navbar -->
+
+  <!-- Main Sidebar Container -->
+  <aside class="main-sidebar sidebar-dark-primary elevation-4">
+  <style>
+  .main-sidebar {
+    background-color:rgb(76, 98, 115) !important;
+  }
+</style>
+    <!-- Brand Logo -->
+    <a href="" class="brand-link">
+      <img src="../Images/SCS logo.jpeg" alt="SCS Logo" class="brand-image img-circle elevation-3" style="opacity: 1;">
+      <span class="brand-text font-weight-light">S.C.S.</span>
+    </a>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <!-- Sidebar user panel (optional) -->
+      <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+        <div class="image">
+          <img src="../dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
+        </div>
+        <div class="info">
+            <a href="#" class="d-block"><?php echo $_SESSION['name'];?></a>
+        </div>
+      </div>  
+
+      <!-- Sidebar Menu -->
+      <nav class="mt-2">
+        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+          <li class="nav-item">
+            <a href="Admin.php" class="nav-link">
+              <i class="nav-icon fas fa-tachometer"></i>
+              <p>
+                Dashboard
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="Inventory.php" class="nav-link">
+              <i class="nav-icon fas fa-list"></i>
+              <p>
+                Inventory
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-th"></i>
+              <p>
+                Simple Link
+                <span class="right badge badge-danger">New</span>
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="logout.php" class="nav-link">
+              <i class="nav-icon fas fa-th"></i>
+              <p>
+                Logout
+              </p>
+            </a>
+          </li>
+        </ul>
+      </nav>
+      <!-- /.sidebar-menu -->
+    </div>
+    <!-- /.sidebar -->
+  </aside>
+
+
+
+
+<!-- 
+  donation Page -->
+
+  <?php
+include_once 'dbconnection.php';
+session_start();
+include_once "sidebar.php";
+?>
+
+<!-- Content Wrapper -->
+<div class="content-wrapper">
+  <div class="content-header">
+    <div class="container">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1 class="m-0">Donations</h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="Admin.php">Home</a></li>
+            <li class="breadcrumb-item active">Donations</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main content -->
+  <div class="content">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="card card-info card-outline">
+            <div class="card-header">
+              <h5 class="m-0">Donation List:</h5>
+            </div>
+            <div class="card-body">
+              <table class="table table-striped table-hover" id="donation">
+                <thead>
+                  <tr>
+                    <th>ID #</th>
+                    <th>Product</th>
+                    <th>Category</th>
+                    <th>Description</th>
+                    <th>From</th>
+                    <th>Stock</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <?php
+                  $select = $pdo->prepare("SELECT * FROM donation ORDER BY pid ASC");
+                  $select->execute();
+
+                  while ($row = $select->fetch(PDO::FETCH_OBJ)) {
+                    echo '
+                    <tr id="row_'.$row->pid.'">
+                      <td>' . htmlspecialchars($row->pid) . '</td>
+                      <td>' . htmlspecialchars($row->donation) . '</td>
+                      <td>' . htmlspecialchars($row->category) . '</td>
+                      <td>' . htmlspecialchars($row->description) . '</td>
+                      <td>' . htmlspecialchars($row->from) . '</td>
+                      <td>' . htmlspecialchars($row->stock) . '</td>
+                      <td>
+                        <div class="btn-group">
+                          <a href="viewproduct.php?id=' . $row->pid . '" class="btn btn-warning btn-xs" data-toggle="tooltip" title="View">
+                            <span class="fa fa-eye" style="color:#ffffff"></span>
+                          </a>
+                          <a href="editproduct.php?id=' . $row->pid . '" class="btn btn-success btn-xs" data-toggle="tooltip" title="Edit">
+                            <span class="fa fa-edit" style="color:#ffffff"></span>
+                          </a>
+                          <button class="btn btn-info btn-xs btnarchive" data-id="' . $row->pid . '" data-name="' . htmlspecialchars($row->donation) . '" data-toggle="tooltip" title="Archive">
+                            <span class="fa fa-archive" style="color:#ffffff"></span>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>';
+                  }
+                  ?>
+                </tbody>
+              </table>
+              <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<?php include_once "footer.php"; ?>
+
+<!-- DataTables Initialization -->
+<script>
+  $(document).ready(function () {
+    $('#donation').DataTable();
+    $('[data-toggle="tooltip"]').tooltip();
+  });
+
+  // Archive function
+  $(document).ready(function () {
+    $('.btnarchive').click(function () {
+      var button = $(this);
+      var id = $(this).data('id');
+      var name = $(this).data('name');
+
+      Swal.fire({
+        title: "Archive Donation?",
+        text: "Are you sure you want to archive '" + name + "'?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, Archive it!"
+      }).then((result) => {
+        if (result.isConfirmed) {
+          $.ajax({
+            url: 'archive.php',
+            type: "POST",
+            data: { pid: id },
+            success: function (response) {
+              if ($.trim(response) === "Success") {
+                $('#row_' + id).fadeOut();
+                Swal.fire("Archived!", "'" + name + "' has been archived.", "success");
+              } else {
+                Swal.fire("Error!", "Failed to archive the record.", "error");
+              }
+            },
+            error: function () {
+              Swal.fire("Error!", "An error occurred while archiving.", "error");
+            }
+          });
+        }
+      });
+    });
+  });
+</script>
